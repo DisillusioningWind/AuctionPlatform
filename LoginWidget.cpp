@@ -1,20 +1,22 @@
 #include "LoginWidget.h"
 
-LoginWidget::LoginWidget(QWidget *parent) : QWidget(parent)
+LoginWidget::LoginWidget(QWidget *parent) : QDialog(parent)
 {
-	iniUI();
-	iniStyleSheet();
-	iniSignalSlots();
+	IniUI();
+	IniStyleSheet();
+	IniSignalSlots();
 }
 
 LoginWidget::~LoginWidget()
 {}
 
-void LoginWidget::iniUI()
+void LoginWidget::IniUI()
 {
 	//QWidget
 	this->setFixedSize(500, 450);
 	this->setWindowTitle("Platform Login");
+	this->setAttribute(Qt::WA_DeleteOnClose);//release resources when closed
+	this->setWindowFlags(Qt::SplashScreen | windowFlags());
 	//QLabel Title
 	lbTitle = new QLabel("AUCTION PLATFORM\nACCOUNT.", this);
 	lbTitle->setObjectName("lbTitle");
@@ -26,7 +28,7 @@ void LoginWidget::iniUI()
 	lbPwd = new QLabel(QStringLiteral("密码："), this);
 	leName = new QLineEdit(this);
 	lePwd = new QLineEdit(this);
-	lePwd->setEchoMode(QLineEdit::EchoMode(2));
+	lePwd->setEchoMode(QLineEdit::Password);
 	QVBoxLayout* comboLay = new QVBoxLayout();
 	comboLay->setContentsMargins(40, 0, 40, 0);
 	comboLay->setSpacing(0);
@@ -40,7 +42,7 @@ void LoginWidget::iniUI()
 	btnAdminLogin = new QPushButton(QStringLiteral("管理员登录"), this);
 	btnExit = new QPushButton(QStringLiteral("退出"), this);
 	QHBoxLayout* btnLay = new QHBoxLayout();
-	btnLay->setContentsMargins(40, 30, 40, 60);
+	btnLay->setContentsMargins(40, 40, 40, 50);
 	btnLay->setSpacing(25);
 	btnLay->addWidget(btnUsrLogin);
 	btnLay->addWidget(btnUsrRegister);
@@ -54,14 +56,38 @@ void LoginWidget::iniUI()
 	widgetLay->addLayout(btnLay);
 }
 
-void LoginWidget::iniStyleSheet()
+void LoginWidget::IniStyleSheet()
 {
 	QFile file("LoginStyle.qss");
 	file.open(QFile::ReadOnly);
 	QString styleSheet = QString::fromLatin1(file.readAll());
 	this->setStyleSheet(styleSheet);
 }
-void LoginWidget::iniSignalSlots()
-{
 
+void LoginWidget::IniSignalSlots()
+{
+	connect(btnExit, SIGNAL(clicked()), this, SLOT(reject()));
+}
+
+void LoginWidget::mousePressEvent(QMouseEvent* e)
+{
+	if (e->button() == Qt::LeftButton)
+	{
+		mMoveState = true;
+		mLastPos = e->pos();
+	}
+}
+
+void LoginWidget::mouseMoveEvent(QMouseEvent* e)
+{
+	if (mMoveState)
+	{
+		move(e->pos() - mLastPos + pos());
+	}
+}
+
+void LoginWidget::mouseReleaseEvent(QMouseEvent* e)
+{
+	Q_UNUSED(e);
+	mMoveState = false;
 }
