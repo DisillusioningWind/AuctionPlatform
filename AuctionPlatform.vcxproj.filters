@@ -1,41 +1,101 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>qml;cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="View">
+      <UniqueIdentifier>{92978566-b1b9-461b-852e-ae188d467b64}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    <Filter Include="Model">
+      <UniqueIdentifier>{b107cd6a-4581-4475-8f10-c678a6763140}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>qrc;rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Controller">
+      <UniqueIdentifier>{e2d89d45-3a9f-4e78-9343-cde4cc25f02b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Qss Files">
+    <Filter Include="Qss">
       <UniqueIdentifier>{8cf63167-988b-43f9-b8e7-4625a5b4f6a9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="LoginWidget.qrc">
-      <Filter>Resource Files</Filter>
-    </QtRcc>
-    <QtMoc Include="LoginWidget.h">
-      <Filter>Header Files</Filter>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="View\LoginWidget.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\CommodityModel.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\OrderModel.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\UserBidModel.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\UserModel.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller\PlatformController.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobalVariable.cpp" />
+    <ClCompile Include="View\UsrWidget.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="View\TabUsrWidget.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="View\TabBuyerWidget.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="View\TabSellerWidget.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="View\LoginWidget.h">
+      <Filter>View</Filter>
     </QtMoc>
-    <ClCompile Include="LoginWidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <QtMoc Include="View\UsrWidget.h">
+      <Filter>View</Filter>
+    </QtMoc>
+    <QtMoc Include="View\TabUsrWidget.h">
+      <Filter>View</Filter>
+    </QtMoc>
+    <QtMoc Include="View\TabBuyerWidget.h">
+      <Filter>View</Filter>
+    </QtMoc>
+    <QtMoc Include="View\TabSellerWidget.h">
+      <Filter>View</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClInclude Include="Global.h" />
+    <ClInclude Include="Model\CommodityModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\OrderModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Timer.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\UserBidModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\UserModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\PlatformController.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalVariable.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="LoginStyle.qss">
-      <Filter>Qss Files</Filter>
+    <None Include="Qss\LoginStyle.qss">
+      <Filter>Qss</Filter>
     </None>
+    <None Include="Qss\UsrStyle.qss">
+      <Filter>Qss</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="Resource.qrc" />
   </ItemGroup>
 </Project>

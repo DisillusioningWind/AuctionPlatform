@@ -1,0 +1,156 @@
+QWidget {
+    font-family: "Microsoft YaHei";
+    background-color: rgb(255,255,255);
+}
+QWidget#wRadio {
+    background-color: rgb(242,242,242);
+    border-right: 1px solid rgb(229,229,229);
+}
+
+QRadioButton[MainRadio=true] {
+    outline: 0px;
+    min-width: 80px;
+    max-width: 80px;
+    min-height: 50px;
+    max-height: 50px;
+    spacing: 10px;
+    background-color: rgb(242,242,242);
+    border-right: 1px solid rgb(229,229,229);
+}
+QRadioButton[MainRadio=true]:hover {
+    background-color: rgb(200,200,200);
+}
+QRadioButton[MainRadio=true]::indicator {
+    width: 5px;
+    height: 50px;
+    background-color: rgb(242,242,242);
+}
+QRadioButton[MainRadio=true]::indicator:hover {
+    background-color: rgb(200,200,200);
+}
+QRadioButton[MainRadio=true]::indicator:checked {
+    background-color: rgb(0,103,192);
+}
+QRadioButton[UsrChar="true"] {
+    height: 31px;
+    color: black;
+    font-size: 13px;
+    padding-left: 32px;
+    border: 1px solid rgb(150,150,150);
+    border-radius: 5px;
+}
+QRadioButton[UsrChar="true"]:checked {
+    background-color: rgb(0,103,192);
+    border: 1px solid rgb(0,103,192);
+    color: white;
+    font-size: 13px;
+}
+QRadioButton[UsrChar="true"]::indicator {
+    width: 0px;
+    height: 0px;
+}
+
+QLabel[UperLb="true"] {
+    font-size: 38px;
+    font-weight: 300;
+}
+QLabel[UsrInfo="true"] {
+    max-width: 140px;
+    min-width: 140px;
+    font-size: 16px;
+}
+QLabel[UsrChar="true"] {
+    font-size: 16px;
+}
+QLabel[UsrChar="true"]#lbBalChar {
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(0,103,192);
+    margin-top: 10px;
+}
+
+QLineEdit[UsrInfo="true"] {
+    min-width: 180px;
+    max-width: 180px;
+    font-size: 16px;
+    border: 1px solid rgb(200,200,200);
+    border-bottom: 1px solid rgb(102,102,102);
+}
+QLineEdit[UsrInfo="true"]:hover {
+    border-bottom: 2px solid rgb(0,103,192);
+}
+QLineEdit[UsrInfo="true"]:focus {
+    border-bottom: 2px solid rgb(0,103,192);
+}
+QLineEdit[UsrChar="true"] {
+    font-size: 16px;
+    border: 1px solid rgb(200,200,200);
+    border-bottom: 1px solid rgb(102,102,102);
+}
+QLineEdit[UsrChar="true"]:hover {
+    border-bottom: 2px solid rgb(0,103,192);
+}
+QLineEdit[UsrChar="true"]:focus {
+    border-bottom: 2px solid rgb(0,103,192);
+}
+
+QPushButton[UsrInfo="true"] {
+    max-width: 70px;
+    min-width: 70px;
+    height: 31px;
+    background-color: rgb(0,103,192);
+    color: white;
+    font-size: 13px;
+    border: none;
+    border-radius: 5px;
+}
+QPushButton[UsrInfo="true"]:disabled {
+    background-color: rgb(229,229,229);
+    color: rgb(91,91,91);
+}
+QPushButton[UsrInfo="true"]:hover {
+    background-color: rgb(25,117,198);
+}
+QPushButton[UsrInfo="true"]:pressed {
+    background-color: rgb(49,132,203);
+    color: rgb(194,218,239);
+}
+QPushButton[UsrChar="true"] {
+    height: 31px;
+    background-color: rgb(0,103,192);
+    color: white;
+    font-size: 13px;
+    border: none;
+    border-radius: 5px;
+}
+QPushButton[UsrChar="true"]:disabled {
+    background-color: rgb(229,229,229);
+    color: rgb(91,91,91);
+}
+QPushButton[UsrChar="true"]:hover {
+    background-color: rgb(25,117,198);
+}
+QPushButton[UsrChar="true"]:pressed {
+    background-color: rgb(49,132,203);
+    color: rgb(194,218,239);
+}
+
+QTabWidget:pane {
+    border: none;
+    border-top: 1px solid rgb(200,200,200);
+}
+QTabBar::tab {
+    font-size: 17px;
+    border: none;
+    height: 35px;
+    width: 60px;
+    color: rgb(102,102,102);
+    margin-top: 5px;
+}
+QTabBar::tab:hover {
+    color: rgb(0,0,0);
+}
+QTabBar::tab:selected {
+    color: rgb(0,0,0);
+    border-bottom: 3px solid rgb(0,103,192);
+}

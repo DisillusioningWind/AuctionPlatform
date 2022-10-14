@@ -6,7 +6,6 @@ LoginWidget::LoginWidget(QWidget *parent) : QDialog(parent)
 	IniStyleSheet();
 	IniSignalSlots();
 }
-
 LoginWidget::~LoginWidget()
 {}
 
@@ -36,6 +35,9 @@ void LoginWidget::IniUI()
 	comboLay->addWidget(leName);
 	comboLay->addWidget(lbPwd);
 	comboLay->addWidget(lePwd);
+	//Test
+	leName->setText("usr");
+	lePwd->setText("pwd");
 	//QPushButton
 	btnUsrLogin = new QPushButton(QStringLiteral("用户登录"), this);
 	btnUsrRegister = new QPushButton(QStringLiteral("用户注册"), this);
@@ -55,20 +57,30 @@ void LoginWidget::IniUI()
 	widgetLay->addLayout(comboLay);
 	widgetLay->addLayout(btnLay);
 }
-
 void LoginWidget::IniStyleSheet()
 {
-	QFile file("LoginStyle.qss");
+	QFile file(":/Qss/LoginStyle.qss");
 	file.open(QFile::ReadOnly);
 	QString styleSheet = QString::fromLatin1(file.readAll());
 	this->setStyleSheet(styleSheet);
 }
-
 void LoginWidget::IniSignalSlots()
 {
 	connect(btnExit, SIGNAL(clicked()), this, SLOT(reject()));
+	connect(btnUsrLogin, SIGNAL(clicked()), this, SLOT(btnUsrLoginClick()));
 }
 
+//slots
+void LoginWidget::btnUsrLoginClick()
+{
+	string name = leName->text().toStdString();
+	string pwd = lePwd->text().toStdString();
+	if (pCon.UserLogin(name, pwd))
+		accept();
+	else
+		qDebug() << "false";
+}
+//Event
 void LoginWidget::mousePressEvent(QMouseEvent* e)
 {
 	if (e->button() == Qt::LeftButton)
@@ -77,7 +89,6 @@ void LoginWidget::mousePressEvent(QMouseEvent* e)
 		mLastPos = e->pos();
 	}
 }
-
 void LoginWidget::mouseMoveEvent(QMouseEvent* e)
 {
 	if (mMoveState)
@@ -85,9 +96,17 @@ void LoginWidget::mouseMoveEvent(QMouseEvent* e)
 		move(e->pos() - mLastPos + pos());
 	}
 }
-
 void LoginWidget::mouseReleaseEvent(QMouseEvent* e)
 {
 	Q_UNUSED(e);
 	mMoveState = false;
+}
+void LoginWidget::keyPressEvent(QKeyEvent* e)
+{
+	if (e->key() == Qt::Key_Down && leName->hasFocus())
+		lePwd->setFocus();
+	else if (e->key() == Qt::Key_Up && lePwd->hasFocus())
+		leName->setFocus();
+	else if (e->key() == Qt::Key_Return)
+		btnUsrLogin->clicked();
 }

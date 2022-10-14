@@ -85,13 +85,42 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <QtRcc Include="LoginWidget.qrc" />
-    <QtMoc Include="LoginWidget.h" />
-    <ClCompile Include="LoginWidget.cpp" />
+    <ClCompile Include="Controller\PlatformController.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Model\CommodityModel.cpp" />
+    <ClCompile Include="Model\OrderModel.cpp" />
+    <ClCompile Include="Model\UserBidModel.cpp" />
+    <ClCompile Include="Model\UserModel.cpp" />
+    <ClCompile Include="GlobalVariable.cpp" />
+    <ClCompile Include="View\LoginWidget.cpp" />
+    <ClCompile Include="View\TabBuyerWidget.cpp" />
+    <ClCompile Include="View\TabSellerWidget.cpp" />
+    <ClCompile Include="View\TabUsrWidget.cpp" />
+    <ClCompile Include="View\UsrWidget.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="LoginStyle.qss" />
+    <QtMoc Include="View\LoginWidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Controller\PlatformController.h" />
+    <ClInclude Include="Global.h" />
+    <ClInclude Include="Model\CommodityModel.h" />
+    <ClInclude Include="Model\OrderModel.h" />
+    <ClInclude Include="Model\Timer.h" />
+    <ClInclude Include="Model\UserBidModel.h" />
+    <ClInclude Include="Model\UserModel.h" />
+    <ClInclude Include="GlobalVariable.h" />
+    <QtMoc Include="View\TabSellerWidget.h" />
+    <QtMoc Include="View\TabBuyerWidget.h" />
+    <QtMoc Include="View\TabUsrWidget.h" />
+    <QtMoc Include="View\UsrWidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Qss\LoginStyle.qss" />
+    <None Include="Qss\UsrStyle.qss" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="Resource.qrc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

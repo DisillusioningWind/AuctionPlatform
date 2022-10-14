@@ -1,9 +1,11 @@
 #pragma once
 
+#include "../GlobalVariable.h"
 #include <QWidget>
 #include <QDialog>
 #include <QApplication>
 #include <QMouseEvent>
+#include <QKeyEvent>
 #include <QDebug>
 #include <QFile>
 #include <QLayout>
@@ -32,10 +34,14 @@ private:
     void IniUI();
     void IniStyleSheet();
     void IniSignalSlots();
+private slots:
+    void btnUsrLoginClick();
+
 protected:
     void mousePressEvent(QMouseEvent* e);
     void mouseMoveEvent(QMouseEvent* e);
     void mouseReleaseEvent(QMouseEvent* e);
+    void keyPressEvent(QKeyEvent* e);
 public:
     LoginWidget(QWidget *parent = nullptr);
     ~LoginWidget();
