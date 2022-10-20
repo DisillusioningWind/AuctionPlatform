@@ -364,6 +364,33 @@ bool PlatformController::AdminGetUser(string uid, UserModel& usr)
 	}
 	return false;
 }
+bool PlatformController::AdminGetOrder(string oid, OrderModel& ord)
+{
+	if (conState == stAdminLogin)
+	{
+		map<string, OrderModel>::iterator it = orders.find(oid);
+		if (it != orders.end())
+		{
+			ord = it->second;
+			return true;
+		}
+	}
+	return false;
+}
+bool PlatformController::AdminUpshelfCommodity(string cid)
+{
+	if (conState == stAdminLogin)
+	{
+		map<string, CommodityModel>::iterator it = goods.find(cid);
+		if (it != goods.end())
+		{
+			it->second.state = true;
+			FileWriteCommodityInfo();
+			return true;
+		}
+	}
+	return false;
+}
 bool PlatformController::AdminDownshelfCommodity(string cid)
 {
 	if (conState == stAdminLogin)
@@ -406,6 +433,20 @@ bool PlatformController::AdminDeactiveUser(string uid)
 			FileWriteUserInfo();
 			FileWriteCommodityInfo();
 			FileWriteBidInfo();
+			return true;
+		}
+	}
+	return false;
+}
+bool PlatformController::AdminActiveUser(string uid)
+{
+	if (conState == stAdminLogin)
+	{
+		map<string, UserModel>::iterator it = users.find(uid);
+		if (it != users.end())
+		{
+			it->second.userState = true;
+			FileWriteUserInfo();
 			return true;
 		}
 	}
@@ -458,15 +499,7 @@ bool PlatformController::UserModifyCurInfo(string name, string pwd, string ph, s
 		if (it != users.end() && bal >= 0)
 		{
 			if (!name.empty())
-			{
-				map<string, UserModel>::iterator sit;
-				for (sit = users.begin(); sit != users.end(); sit++)
-				{
-					if (name == sit->second.userName)
-						return false;
-				}
 				it->second.userName = name;
-			}
 			if (!pwd.empty())
 				it->second.passWord = pwd;
 			if (!ph.empty())
@@ -513,6 +546,19 @@ bool PlatformController::BuyerGetHistoryOrderList(map<string, OrderModel>& ods)
 	}
 	return false;
 }
+bool PlatformController::BuyerGetOrder(string oid, OrderModel& ord)
+{
+	if (conState == stUserLogin)
+	{
+		map<string, OrderModel>::iterator it = orders.find(oid);
+		if (it != orders.end() && it->second.buyerID == curUserID)
+		{
+			ord = it->second;
+			return true;
+		}
+	}
+	return false;
+}
 bool PlatformController::BuyerSearchCommodity(string name, map<string, CommodityModel>& coms)
 {
 	if (conState == stUserLogin)
@@ -555,18 +601,91 @@ bool PlatformController::BuyerGetCommodityDetail(string cid, CommodityModel& com
 	}
 	return false;
 }
+bool PlatformController::BuyerGetBidList(map<string, vector<UserBidModel>>& bids)
+{
+	if (conState == stUserLogin)
+	{
+		map<string, vector<UserBidModel>>::iterator bit;
+		vector<UserBidModel>::iterator uit;
+		for (bit = bidList.begin(); bit != bidList.end(); bit++)
+		{
+			for (uit = (*bit).second.begin(); uit != (*bit).second.end(); uit++)
+			{
+				if ((*uit).bidUserID == curUserID)
+				{
+					bids[(*bit).first].push_back(*uit);
+					break;
+				}
+			}
+		}
+	}
+	return false;
+}
 bool PlatformController::BuyerBidCommodity(double offer, string cid, int num)
 {
 	if (conState == stUserLogin)
 	{
 		map<string, UserModel>::iterator it = users.find(curUserID);
 		map<string, CommodityModel>::iterator cit = goods.find(cid);
-		if (it != users.end() && cit != goods.end() && cit->second.state == true && offer <= it->second.balance && offer >= cit->second.price)
+		double sum = offer * (double)num;
+		if (it != users.end() && cit != goods.end() && cit->second.state == true && sum <= it->second.balance && offer >= cit->second.price)
 		{
 			UserBidModel bid(offer, num, curUserID, GetCurTime());
 			bidList[cid].push_back(bid);
 			FileWriteBidInfo();
 			return true;
+		}
+	}
+	return false;
+}
+bool PlatformController::BuyerBidCancel(string cid)
+{
+	if (conState == stUserLogin)
+	{
+		map<string, UserModel>::iterator it = users.find(curUserID);
+		map<string, CommodityModel>::iterator cit = goods.find(cid);
+		if (it != users.end() && cit != goods.end() && cit->second.state == true)
+		{
+			vector<UserBidModel>::iterator bit;
+			for (bit = bidList[cid].begin(); bit != bidList[cid].end(); bit++)
+			{
+				if ((*bit).bidUserID == curUserID)
+					break;
+			}
+			if (bit != bidList[cid].end())
+			{
+				bidList[cid].erase(bit);
+				FileWriteBidInfo();
+				return true;
+			}
+		}
+	}
+	return false;
+}
+bool PlatformController::BuyerBidChangeOffer(double offer, string cid, int num)
+{
+	if (conState == stUserLogin)
+	{
+		map<string, UserModel>::iterator it = users.find(curUserID);
+		map<string, CommodityModel>::iterator cit = goods.find(cid);
+		double sum = offer * (double)num;
+		if (it != users.end() && cit != goods.end() && cit->second.state == true && sum <= it->second.balance && offer >= cit->second.price)
+		{
+			vector<UserBidModel>::iterator bit;
+			for (bit = bidList[cid].begin(); bit != bidList[cid].end(); bit++)
+			{
+				if ((*bit).bidUserID == curUserID)
+					break;
+			}
+			if (bit != bidList[cid].end())
+			{
+				(*bit).offer = offer;
+				if (num > 0)
+					(*bit).number = num;
+				(*bit).time = GetCurTime();
+				FileWriteBidInfo();
+				return true;
+			}
 		}
 	}
 	return false;
@@ -626,6 +745,19 @@ bool PlatformController::SellerGetHistoryOrderList(map<string, OrderModel>& ods)
 			}
 		}
 		return true;
+	}
+	return false;
+}
+bool PlatformController::SellerGetOrder(string oid, OrderModel& ord)
+{
+	if (conState == stUserLogin)
+	{
+		map<string, OrderModel>::iterator it = orders.find(oid);
+		if (it != orders.end() && it->second.sellerID == curUserID)
+		{
+			ord = it->second;
+			return true;
+		}
 	}
 	return false;
 }

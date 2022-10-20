@@ -66,6 +66,7 @@ void UsrWidget::IniSignalSlots()
 	connect(btnUsr, SIGNAL(clicked(bool)), this, SLOT(btnRadioClick(bool)));
 	connect(btnBuyer, SIGNAL(clicked(bool)), this, SLOT(btnRadioClick(bool)));
 	connect(btnSeller, SIGNAL(clicked(bool)), this, SLOT(btnRadioClick(bool)));
+	connect(wUsr->btnInfoLogout, SIGNAL(clicked()), this, SLOT(btnLogoutClick()));
 }
 
 void UsrWidget::btnRadioClick(bool checked)
@@ -73,10 +74,29 @@ void UsrWidget::btnRadioClick(bool checked)
 	if (checked)
 	{
 		if ((QRadioButton*)sender() == btnUsr)
+		{
+			wUsr->updatePageInfo();
+			wUsr->updatePageChar();
 			contentLay->setCurrentWidget(wUsr);
+		}
 		else if ((QRadioButton*)sender() == btnBuyer)
+		{
+			wBuyer->updatePageComs();
+			wBuyer->updatePageBids();
+			wBuyer->updatePageOrds();
 			contentLay->setCurrentWidget(wBuyer);
+		}
 		else if ((QRadioButton*)sender() == btnSeller)
+		{
+			wSeller->UpdatePageComs();
+			wSeller->UpdatePageOrds();
 			contentLay->setCurrentWidget(wSeller);
+		}
 	}
+}
+void UsrWidget::btnLogoutClick()
+{
+	pCon.Logout();
+	emit UsrWidgetClosed();
+	this->hide();
 }

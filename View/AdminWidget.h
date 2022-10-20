@@ -3,32 +3,55 @@
 #include "../GlobalVariable.h"
 #include <QWidget>
 #include <QTabWidget>
-#include <QLabel>
-#include <QLayout>
-#include <QVariant>
-#include <QLineEdit>
-#include <QSpacerItem>
-#include <QPushButton>
 #include <QRadioButton>
-#include <QStyle>
+#include <QPushBUtton>
+#include <QLayout>
+#include <QFile>
 #include <QDebug>
+#include <QApplication>
+#include <QDesktopWidget>
+#include <QRect>
+#include <QLabel>
 #include <QTextEdit>
 #include <QMessageBox>
 #include <QListView>
 #include <QListWidget>
 #include <QStringListModel>
-#include <QTextBrowser>
+#include <QLineEdit>
+#include <QSpacerItem>
 
-class TabSellerWidget : public QWidget
+class AdminWidget : public QWidget
 {
 	Q_OBJECT
 private:
-	QLabel* lb;
+    QPushButton* btnLogout;
 	QTabWidget* wTab;
 	//Page
+	QWidget* pageUsrs;
 	QWidget* pageComs;
-	QWidget* pageRele;
 	QWidget* pageOrds;
+	//Page Usrs
+	QStringListModel* usrsModel;
+	QListView* usrsList;
+	QWidget* usrsDetWidget;
+	QLabel* lbUsrUid;
+	QLabel* lbUsrNam;
+	QLabel* lbUsrPwd;
+	QLabel* lbUsrPhn;
+	QLabel* lbUsrAdd;
+	QLabel* lbUsrBal;
+	QLabel* lbDesUid;
+	QLabel* lbDesNam;
+	QLabel* lbDesPwd;
+	QLabel* lbDesPhn;
+	QLabel* lbDesAdd;
+	QLabel* lbDesBal;
+	QRadioButton* btnUsrStUp;
+	QRadioButton* btnUsrStDo;
+	QPushButton* btnUsrClo;
+	QPushButton* btnUsrCha;
+	std::string uid;
+	UserModel usr;
 	//Page Coms
 	QStringListModel* comsModel;
 	QListView* comsList;
@@ -43,20 +66,10 @@ private:
 	QTextEdit* tbComDes;
 	QRadioButton* btnComStUp;
 	QRadioButton* btnComStDo;
-	QPushButton* btnClo;
-	QPushButton* btnBid;
+	QPushButton* btnComClo;
+	QPushButton* btnComCha;
 	std::string cid;
 	CommodityModel com;
-	//Page Rele
-	QLabel* lbReNam;
-	QLabel* lbRePri;
-	QLabel* lbReNum;
-	QLabel* lbReDes;
-	QLineEdit* leReNam;
-	QLineEdit* leRePri;
-	QLineEdit* leReNum;
-	QTextEdit* teReDes;
-	QPushButton* btnReRe;
 	//Page Ords
 	QStringListModel* ordsModel;
 	QListView* ordsList;
@@ -79,20 +92,27 @@ private:
 	OrderModel ord;
 	//Widget Initialize
 	void IniUI();
+	void IniStyleSheet();
 	void IniSignalSlots();
+	//Page Initialize
+	void IniPageUsrs();
 	void IniPageComs();
-	void IniPageRele();
 	void IniPageOrds();
 public slots:
-	void UpdatePageComs();
-	void UpdatePageOrds();
-	void tabChange(int index);
-	void btnReReClick();
+	void updatePageUsrs();
+	void updatePageComs();
+	void updatePageOrds();
+	void btnLogoutClick();
+	void btnComCloClick();
+	void btnComChaClick();
+	void btnUsrCloClick();
+	void btnUsrChaClick();
+	void listUsrsSelect(const QModelIndex& index);
 	void listComsSelect(const QModelIndex& index);
 	void listOrdsSelect(const QModelIndex& index);
-	void btnCloClick();
-	void btnBidClick();
 public:
-	TabSellerWidget(QWidget *parent = nullptr);
-	~TabSellerWidget();
+	AdminWidget(QWidget *parent = nullptr);
+	~AdminWidget();
+signals:
+	void AdminWidgetClosed();
 };

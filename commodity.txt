@@ -1,0 +1,5 @@
+M001,Book,10.1,8,It's not a book.,U001,2022-10-19,onAuction,1666191904
+M002,Paper,1,5,a piece of paper,U001,2022-10-19,onAuction,1666282075
+M003,Book ver3,8,9,des9,U001,2022-10-19,onAuction,1666192269
+M004,pen,5,4,pena,U001,2022-10-20,onAuction,1666254705
+M005,nju,12,5,e3e3e,U002,2022-10-21,removed,1666284614

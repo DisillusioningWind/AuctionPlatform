@@ -63,8 +63,11 @@ public:
 	bool AdminSearchCommodity(string name, map<string, CommodityModel>& coms);
 	bool AdminGetCommodity(string cid, CommodityModel& com);
 	bool AdminGetUser(string uid, UserModel& usr);
+	bool AdminGetOrder(string oid, OrderModel& ord);
+	bool AdminUpshelfCommodity(string cid);
 	bool AdminDownshelfCommodity(string cid);
 	bool AdminDeactiveUser(string uid);
+	bool AdminActiveUser(string uid);
 	//User
 	bool UserRegister(string userName, string pwd);
 	bool UserLogin(string userName, string pwd);
@@ -73,15 +76,20 @@ public:
 	//Buyer
 	bool BuyerGetCommodityList(map<string, CommodityModel>& coms);
 	bool BuyerGetHistoryOrderList(map<string, OrderModel>& ods);
+	bool BuyerGetOrder(string oid, OrderModel& ord);
 	bool BuyerSearchCommodity(string name, map<string, CommodityModel>& coms);
 	bool BuyerGetCommodityDescription(string cid, string& des);
 	bool BuyerGetCommodityDetail(string cid, CommodityModel& com);
+	bool BuyerGetBidList(map<string, vector<UserBidModel>>& bids);
 	bool BuyerBidCommodity(double offer, string cid, int num);
+	bool BuyerBidCancel(string cid);
+	bool BuyerBidChangeOffer(double offer, string cid, int num = -1);
 	bool BuyerBuyCommodity(string bid, double money);
 	//Seller
 	bool SellerGetCommodityList(map<string, CommodityModel>& coms);
 	bool SellerGetCommodity(string cid, CommodityModel& com);
 	bool SellerGetHistoryOrderList(map<string, OrderModel>& ods);
+	bool SellerGetOrder(string oid, OrderModel& ord);
 	bool SellerReleaseCommodity(string name, double pri, int num, string des);
 	bool SellerModifyCommodityInfo(string cid, double pri = -1, string des = "", int num = -1, string name = "");
 	bool SellerDownshelfCommodity(string cid);

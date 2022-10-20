@@ -34,6 +34,10 @@ void TabUsrWidget::IniSignalSlots()
 	connect(btnHun, SIGNAL(clicked()), this, SLOT(btnBalClick()));
 	connect(btnTHu, SIGNAL(clicked()), this, SLOT(btnBalClick()));
 	connect(btnCus, SIGNAL(clicked()), this, SLOT(btnBalClick()));
+	connect(btnChar, SIGNAL(clicked()), this, SLOT(btnCharClick()));
+	connect(btnInfoChange, SIGNAL(clicked()), this, SLOT(btnInfoChangeClick()));
+	//connect(btnInfoLogout, SIGNAL(clicked()), this, SLOT(btnInfoLogoutClick()));
+	connect(wTab, SIGNAL(currentChanged(int)), this, SLOT(tabChange(int)));
 }
 
 void TabUsrWidget::IniPageInfo()
@@ -46,13 +50,11 @@ void TabUsrWidget::IniPageInfo()
 	lbAdd = new QLabel(QStringLiteral("地址"), pageInfo);
 	lbBal = new QLabel(QStringLiteral("余额"), pageInfo);
 	//QLineEdit
-	UserModel usr;
-	pCon.UserGetCurInfo(usr);
-	leName = new QLineEdit(QString::fromStdString(usr.userName), pageInfo);
-	lePwd = new QLineEdit(QString::fromStdString(usr.passWord), pageInfo);
-	lePh = new QLineEdit(QString::fromStdString(usr.phoneNumber), pageInfo);
-	leAdd = new QLineEdit(QString::fromStdString(usr.address), pageInfo);
-	leBal = new QLineEdit(QString::number(usr.balance, 'f', 1), pageInfo);
+	leName = new QLineEdit(pageInfo);
+	lePwd = new QLineEdit(pageInfo);
+	lePh = new QLineEdit(pageInfo);
+	leAdd = new QLineEdit(pageInfo);
+	leBal = new QLineEdit(pageInfo);
 	//QPushButton
 	btnInfoChange = new QPushButton(QStringLiteral("修改"), pageInfo);
 	btnInfoLogout = new QPushButton(QStringLiteral("注销"), pageInfo);
@@ -70,7 +72,7 @@ void TabUsrWidget::IniPageInfo()
 	btnInfoChange->setProperty("UsrInfo", "true");
 	btnInfoLogout->setProperty("UsrInfo", "true");
 	leBal->setEnabled(false);
-	//btnInfoChange->setDisabled(true);
+	updatePageInfo();
 	//QLayout
 	QVBoxLayout* infoLbLay = new QVBoxLayout();
 	QVBoxLayout* infoLeLay = new QVBoxLayout();
@@ -118,10 +120,8 @@ void TabUsrWidget::IniPageCharge()
 {
 	pageChar = new QWidget();
 	//QLabel
-	UserModel usr;
-	pCon.UserGetCurInfo(usr);
 	lbBalDes = new QLabel(QStringLiteral("当前账户余额："), pageChar);
-	lbBalChar = new QLabel(QString::number(usr.balance, 'f', 1) + QStringLiteral("元"), pageChar);
+	lbBalChar = new QLabel(pageChar);
 	//QPushButton
 	btnTen = new QRadioButton(QStringLiteral("10元"), pageChar);
 	btnTew = new QRadioButton(QStringLiteral("20元"), pageChar);
@@ -145,6 +145,7 @@ void TabUsrWidget::IniPageCharge()
 	btnCus->setProperty("UsrChar", "true");
 	lbBalChar->setObjectName("lbBalChar");
 	leChar->hide();
+	updatePageChar();
 	//QLayout
 	QVBoxLayout* charBalLay = new QVBoxLayout();
 	QVBoxLayout* charChaLay = new QVBoxLayout();
@@ -190,5 +191,112 @@ void TabUsrWidget::btnBalClick()
 }
 void TabUsrWidget::btnCharClick()
 {
+	if (btnTen->isChecked())
+	{
+		pCon.UserModifyCurInfo("", "", "", "", 10);
+		btnTen->setChecked(false);
+	}
+	else if (btnTew->isChecked())
+	{
+		pCon.UserModifyCurInfo("", "", "", "", 20);
+		btnTew->setChecked(false);
+	}
+	else if (btnFif->isChecked())
+	{
+		pCon.UserModifyCurInfo("", "", "", "", 50);
+		btnFif->setChecked(false);
+	}
+	else if (btnHun->isChecked())
+	{
+		pCon.UserModifyCurInfo("", "", "", "", 100);
+		btnHun->setChecked(false);
+	}
+	else if (btnTHu->isChecked())
+	{
+		pCon.UserModifyCurInfo("", "", "", "", 200);
+		btnTHu->setChecked(false);
+	}
+	else if (btnCus->isChecked())
+	{
+		double newBal = leChar->text().toDouble();
+		pCon.UserModifyCurInfo("", "", "", "", newBal);
+		leChar->clear();
+		leChar->hide();
+		btnCus->setChecked(false);
+	}
+	QMessageBox::information(this, QStringLiteral("充值结果"), QStringLiteral("充值成功"));
+	updatePageChar();
+}
+void TabUsrWidget::btnInfoChangeClick()
+{
+	UserModel usr;
+	pCon.UserGetCurInfo(usr);
+	std::string nam = leName->text().toStdString();
+	std::string pwd = lePwd->text().toStdString();
+	std::string phn = lePh->text().toStdString();
+	std::string add = leAdd->text().toStdString();
+	if (nam == usr.userName && pwd == usr.passWord &&
+		phn == usr.phoneNumber && add == usr.address)
+	{
+		QMessageBox::information(this, QStringLiteral("修改结果"), QStringLiteral("请至少作出一项改动"));
+		return;
+	}
+	if (pCon.UserModifyCurInfo(nam, pwd, phn, add))
+	{
+		QMessageBox::information(this, QStringLiteral("修改结果"), QStringLiteral("修改成功"));
+	}
+	else
+	{
+		QMessageBox::information(this, QStringLiteral("修改结果"), QStringLiteral("修改失败"));
+	}
+}
+void TabUsrWidget::btnInfoChangeState()
+{
 
+}
+//void TabUsrWidget::btnInfoLogoutClick()
+//{
+//	pCon.Logout();
+//	emit UsrWidgetClosed();
+//	this->parentWidget()->close();
+//	this->parentWidget()->hide();
+//	if (login->exec() == QDialog::Accepted)
+//	{
+//		if (pCon.GetConState() == ConState::stUserLogin)
+//		{
+//			updatePageInfo();
+//			this->parentWidget()->show();
+//		}
+//	}
+//	else
+//	{
+//		this->parentWidget()->close();
+//	}
+//}
+void TabUsrWidget::updatePageInfo()
+{
+	UserModel usr;
+	pCon.UserGetCurInfo(usr);
+	leName->setText(QString::fromStdString(usr.userName));
+	lePwd->setText(QString::fromStdString(usr.passWord));
+	lePh->setText(QString::fromStdString(usr.phoneNumber));
+	leAdd->setText(QString::fromStdString(usr.address));
+	leBal->setText(QString::number(usr.balance, 'f', 1));
+}
+void TabUsrWidget::updatePageChar()
+{
+	UserModel usr;
+	pCon.UserGetCurInfo(usr);
+	lbBalChar->setText(QString::number(usr.balance, 'f', 1) + QStringLiteral("元"));
+}
+void TabUsrWidget::tabChange(int index)
+{
+	if (index == 0)
+	{
+		updatePageInfo();
+	}
+	else if (index == 1)
+	{
+		updatePageChar();
+	}
 }

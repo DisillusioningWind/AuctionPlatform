@@ -1,6 +1,8 @@
 #pragma once
 
 #include "../GlobalVariable.h"
+#include "UsrWidget.h"
+#include "AdminWidget.h"
 #include <QWidget>
 #include <QDialog>
 #include <QApplication>
@@ -12,11 +14,15 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QMessageBox>
 
-class LoginWidget : public QDialog
+class LoginWidget : public QWidget
 {
     Q_OBJECT
 private:
+    //
+    UsrWidget* wUsr;
+    AdminWidget* wAdmin;
     //UI Widgets
     QLabel* lbTitle;
     QLabel* lbName;
@@ -36,7 +42,9 @@ private:
     void IniSignalSlots();
 private slots:
     void btnUsrLoginClick();
-
+    void btnUsrRegisterClick();
+    void btnAdminLoginClick();
+    void widgetShow();
 protected:
     void mousePressEvent(QMouseEvent* e);
     void mouseMoveEvent(QMouseEvent* e);

@@ -1,5 +1,6 @@
 QWidget {
     font-family: "Microsoft YaHei";
+    font-size: 13px;
     background-color: rgb(255,255,255);
 }
 QWidget#wRadio {

@@ -17,7 +17,7 @@
 class UsrWidget : public QWidget
 {
 	Q_OBJECT
-private:
+public:
 	//UI Widgets
 	QRadioButton* btnUsr;
 	QRadioButton* btnBuyer;
@@ -32,7 +32,10 @@ private:
 	void IniSignalSlots();
 private slots:
 	void btnRadioClick(bool checked);
+	void btnLogoutClick();
 public:
 	UsrWidget(QWidget *parent = nullptr);
 	~UsrWidget();
+signals:
+	void UsrWidgetClosed();
 };

@@ -12,11 +12,12 @@
 #include <QRadioButton>
 #include <QStyle>
 #include <QDebug>
+#include <QMessageBox>
 
 class TabUsrWidget : public QWidget
 {
 	Q_OBJECT
-private:
+public:
 	QLabel* lb;
 	QTabWidget* wTab;
 	//Page Widget
@@ -51,9 +52,15 @@ private:
 	void IniSignalSlots();
 	void IniPageInfo();
 	void IniPageCharge();
-private slots:
+public slots:
+	void tabChange(int index);
+	void btnInfoChangeClick();
+	void btnInfoChangeState();
+	//void btnInfoLogoutClick();
 	void btnCharClick();
 	void btnBalClick();
+	void updatePageInfo();
+	void updatePageChar();
 public:
 	TabUsrWidget(QWidget *parent = nullptr);
 	~TabUsrWidget();

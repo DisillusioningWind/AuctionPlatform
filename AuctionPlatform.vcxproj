@@ -92,6 +92,9 @@
     <ClCompile Include="Model\UserBidModel.cpp" />
     <ClCompile Include="Model\UserModel.cpp" />
     <ClCompile Include="GlobalVariable.cpp" />
+    <ClCompile Include="View\AdminWidget.cpp" />
+    <ClCompile Include="View\BuyerBidWidget.cpp" />
+    <ClCompile Include="View\ComListItem.cpp" />
     <ClCompile Include="View\LoginWidget.cpp" />
     <ClCompile Include="View\TabBuyerWidget.cpp" />
     <ClCompile Include="View\TabSellerWidget.cpp" />
@@ -110,6 +113,9 @@
     <ClInclude Include="Model\UserBidModel.h" />
     <ClInclude Include="Model\UserModel.h" />
     <ClInclude Include="GlobalVariable.h" />
+    <QtMoc Include="View\AdminWidget.h" />
+    <QtMoc Include="View\BuyerBidWidget.h" />
+    <QtMoc Include="View\ComListItem.h" />
     <QtMoc Include="View\TabSellerWidget.h" />
     <QtMoc Include="View\TabBuyerWidget.h" />
     <QtMoc Include="View\TabUsrWidget.h" />

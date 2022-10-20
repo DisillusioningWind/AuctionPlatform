@@ -47,6 +47,15 @@
     <ClCompile Include="View\TabSellerWidget.cpp">
       <Filter>View</Filter>
     </ClCompile>
+    <ClCompile Include="View\ComListItem.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="View\BuyerBidWidget.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="View\AdminWidget.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="View\LoginWidget.h">
@@ -62,6 +71,15 @@
       <Filter>View</Filter>
     </QtMoc>
     <QtMoc Include="View\TabSellerWidget.h">
+      <Filter>View</Filter>
+    </QtMoc>
+    <QtMoc Include="View\ComListItem.h">
+      <Filter>View</Filter>
+    </QtMoc>
+    <QtMoc Include="View\BuyerBidWidget.h">
+      <Filter>View</Filter>
+    </QtMoc>
+    <QtMoc Include="View\AdminWidget.h">
       <Filter>View</Filter>
     </QtMoc>
   </ItemGroup>

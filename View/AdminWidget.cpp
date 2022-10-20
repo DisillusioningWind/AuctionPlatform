@@ -1,44 +1,116 @@
-#include "TabSellerWidget.h"
+#include "AdminWidget.h"
 
-TabSellerWidget::TabSellerWidget(QWidget *parent) : QWidget(parent)
+AdminWidget::AdminWidget(QWidget *parent) : QWidget(parent)
 {
 	IniUI();
+	IniStyleSheet();
 	IniSignalSlots();
 }
-TabSellerWidget::~TabSellerWidget()
+AdminWidget::~AdminWidget()
 {}
 
-void TabSellerWidget::IniUI()
+void AdminWidget::IniUI()
 {
-	lb = new QLabel(QStringLiteral("我是卖家"), this);
-	lb->setProperty("UperLb", "true");
+	//Window
+	this->resize(700, 500);
+	//Widget
+	btnLogout = new QPushButton(QStringLiteral("退出登录"), this);
 	wTab = new QTabWidget(this);
 	//Page
+	IniPageUsrs();
 	IniPageComs();
-	IniPageRele();
 	IniPageOrds();
 	//Add Tab
+	wTab->addTab(pageUsrs, QStringLiteral("用户"));
 	wTab->addTab(pageComs, QStringLiteral("商品"));
-	wTab->addTab(pageRele, QStringLiteral("发布"));
 	wTab->addTab(pageOrds, QStringLiteral("订单"));
 	//Layout
 	QVBoxLayout* lay = new QVBoxLayout(this);
-	lay->setMargin(0);
+	lay->setContentsMargins(20, 0, 20, 20);
 	lay->setSpacing(0);
-	lay->addWidget(lb);
 	lay->addWidget(wTab);
+	lay->addWidget(btnLogout);
 }
-void TabSellerWidget::IniSignalSlots()
+void AdminWidget::IniStyleSheet()
 {
+	QFile file(":/Qss/UsrStyle.qss");
+	file.open(QFile::ReadOnly);
+	QString styleSheet = QString::fromLatin1(file.readAll());
+	this->setStyleSheet(styleSheet);
+}
+void AdminWidget::IniSignalSlots()
+{
+	connect(usrsList, SIGNAL(clicked(const QModelIndex)), this, SLOT(listUsrsSelect(const QModelIndex)));
 	connect(comsList, SIGNAL(clicked(const QModelIndex)), this, SLOT(listComsSelect(const QModelIndex)));
 	connect(ordsList, SIGNAL(clicked(const QModelIndex)), this, SLOT(listOrdsSelect(const QModelIndex)));
-	connect(btnClo, SIGNAL(clicked()), this, SLOT(btnCloClick()));
-	connect(btnReRe, SIGNAL(clicked()), this, SLOT(btnReReClick()));
-	connect(btnBid, SIGNAL(clicked()), this, SLOT(btnBidClick()));
-	connect(wTab, SIGNAL(currentChanged(int)), this, SLOT(tabChange(int)));
+	connect(btnLogout, SIGNAL(clicked()), this, SLOT(btnLogoutClick()));
+	connect(btnComClo, SIGNAL(clicked()), this, SLOT(btnComCloClick()));
+	connect(btnComCha, SIGNAL(clicked()), this, SLOT(btnComChaClick()));
+	connect(btnUsrClo, SIGNAL(clicked()), this, SLOT(btnUsrCloClick()));
+	connect(btnUsrCha, SIGNAL(clicked()), this, SLOT(btnUsrChaClick()));
 }
 
-void TabSellerWidget::IniPageComs()
+void AdminWidget::IniPageUsrs()
+{
+	pageUsrs = new QWidget();
+	//Model & View & Widget
+	usrsModel = new QStringListModel(pageUsrs);
+	usrsList = new QListView(pageUsrs);
+	usrsDetWidget = new QWidget(pageUsrs);
+	lbDesUid = new QLabel(QStringLiteral("用户ID"), usrsDetWidget);
+	lbDesNam = new QLabel(QStringLiteral("用户名"), usrsDetWidget);
+	lbDesPwd = new QLabel(QStringLiteral("用户密码"), usrsDetWidget);
+	lbDesPhn = new QLabel(QStringLiteral("联系方式"), usrsDetWidget);
+	lbDesAdd = new QLabel(QStringLiteral("用户住址"), usrsDetWidget);
+	lbDesBal = new QLabel(QStringLiteral("账户余额"), usrsDetWidget);
+	lbUsrUid = new QLabel(usrsDetWidget);
+	lbUsrNam = new QLabel(usrsDetWidget);
+	lbUsrPwd = new QLabel(usrsDetWidget);
+	lbUsrPhn = new QLabel(usrsDetWidget);
+	lbUsrAdd = new QLabel(usrsDetWidget);
+	lbUsrBal = new QLabel(usrsDetWidget);
+	btnUsrStUp = new QRadioButton(QStringLiteral("激活"), usrsDetWidget);
+	btnUsrStDo = new QRadioButton(QStringLiteral("禁止"), usrsDetWidget);
+	btnUsrCha = new QPushButton(QStringLiteral("封禁"), usrsDetWidget);
+	btnUsrClo = new QPushButton(QStringLiteral("关闭"), usrsDetWidget);
+	//Setting
+	updatePageUsrs();
+	usrsList->setModel(usrsModel);
+	usrsList->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	usrsDetWidget->setFixedWidth(0);
+	//Layout
+	QHBoxLayout* comsBtnLay = new QHBoxLayout();
+	QVBoxLayout* comsDetLay = new QVBoxLayout(usrsDetWidget);
+	QHBoxLayout* comsLay = new QHBoxLayout(pageUsrs);
+
+	comsBtnLay->setContentsMargins(0, 0, 0, 0);
+	comsBtnLay->setSpacing(10);
+	comsDetLay->setContentsMargins(20, 10, 0, 0);
+	comsDetLay->setSpacing(10);
+	comsLay->setContentsMargins(0, 0, 0, 20);
+	comsLay->setSpacing(0);
+
+	comsDetLay->addWidget(btnUsrStUp);
+	comsDetLay->addWidget(btnUsrStDo);
+	comsDetLay->addWidget(lbDesUid);
+	comsDetLay->addWidget(lbUsrUid);
+	comsDetLay->addWidget(lbDesNam);
+	comsDetLay->addWidget(lbUsrNam);
+	comsDetLay->addWidget(lbDesPwd);
+	comsDetLay->addWidget(lbUsrPwd);
+	comsDetLay->addWidget(lbDesPhn);
+	comsDetLay->addWidget(lbUsrPhn);
+	comsDetLay->addWidget(lbDesAdd);
+	comsDetLay->addWidget(lbUsrAdd);
+	comsDetLay->addWidget(lbDesBal);
+	comsDetLay->addWidget(lbUsrBal);
+	comsBtnLay->addWidget(btnUsrClo);
+	comsBtnLay->addWidget(btnUsrCha);
+	comsDetLay->addLayout(comsBtnLay);
+	comsLay->addWidget(usrsList);
+	comsLay->addWidget(usrsDetWidget);
+}
+void AdminWidget::IniPageComs()
 {
 	pageComs = new QWidget();
 	//Model & View & Widget
@@ -55,10 +127,10 @@ void TabSellerWidget::IniPageComs()
 	tbComDes = new QTextEdit(comsDetWidget);
 	btnComStUp = new QRadioButton(QStringLiteral("在售"), comsDetWidget);
 	btnComStDo = new QRadioButton(QStringLiteral("下架"), comsDetWidget);
-	btnBid = new QPushButton(QStringLiteral("修改"), comsDetWidget);
-	btnClo = new QPushButton(QStringLiteral("关闭"), comsDetWidget);
+	btnComCha = new QPushButton(QStringLiteral("上下架"), comsDetWidget);
+	btnComClo = new QPushButton(QStringLiteral("关闭"), comsDetWidget);
 	//Setting
-	UpdatePageComs();
+	updatePageComs();
 	comsList->setModel(comsModel);
 	comsList->setEditTriggers(QAbstractItemView::NoEditTriggers);
 	comsDetWidget->setFixedWidth(0);
@@ -87,47 +159,13 @@ void TabSellerWidget::IniPageComs()
 	comsDetLay->addWidget(leComNum);
 	comsDetLay->addWidget(lbComDes);
 	comsDetLay->addWidget(tbComDes);
-	comsBtnLay->addWidget(btnClo);
-	comsBtnLay->addWidget(btnBid);
+	comsBtnLay->addWidget(btnComClo);
+	comsBtnLay->addWidget(btnComCha);
 	comsDetLay->addLayout(comsBtnLay);
 	comsLay->addWidget(comsList);
 	comsLay->addWidget(comsDetWidget);
 }
-void TabSellerWidget::IniPageRele()
-{
-	pageRele = new QWidget();
-	//QLabel & QLineEdit & QTextEdit & QPushButton
-	lbReNam = new QLabel(QStringLiteral("商品名称"), pageRele);
-	lbRePri = new QLabel(QStringLiteral("商品价格"), pageRele);
-	lbReNum = new QLabel(QStringLiteral("商品数量"), pageRele);
-	lbReDes = new QLabel(QStringLiteral("商品描述"), pageRele);
-	leReNam = new QLineEdit(pageRele);
-	leRePri = new QLineEdit(pageRele);
-	leReNum = new QLineEdit(pageRele);
-	teReDes = new QTextEdit(pageRele);
-	btnReRe = new QPushButton(QStringLiteral("发布"), pageRele);
-
-	//Layout
-	QGridLayout* releDetLay = new QGridLayout();
-	QVBoxLayout* releLay = new QVBoxLayout(pageRele);
-
-	releDetLay->setMargin(0);
-	releDetLay->setSpacing(10);
-	releLay->setContentsMargins(0, 10, 0, 30);
-	releLay->setSpacing(10);
-
-	releDetLay->addWidget(lbReNam, 1, 1, 1, 2);
-	releDetLay->addWidget(leReNam, 2, 1, 1, 2);
-	releDetLay->addWidget(lbRePri, 3, 1);
-	releDetLay->addWidget(lbReNum, 3, 2);
-	releDetLay->addWidget(leRePri, 4, 1);
-	releDetLay->addWidget(leReNum, 4, 2);
-	releDetLay->addWidget(lbReDes, 5, 1, 1, 2);
-	releLay->addLayout(releDetLay);
-	releLay->addWidget(teReDes);
-	releLay->addWidget(btnReRe);
-}
-void TabSellerWidget::IniPageOrds()
+void AdminWidget::IniPageOrds()
 {
 	pageOrds = new QWidget();
 	//Model & View & Widget
@@ -149,7 +187,7 @@ void TabSellerWidget::IniPageOrds()
 	lbOrdNumDes = new QLabel(QStringLiteral("成交数量"), ordsDetWidget);
 	lbOrdDatDes = new QLabel(QStringLiteral("成交日期"), ordsDetWidget);
 	//Setting
-	UpdatePageOrds();
+	updatePageOrds();
 	ordsList->setModel(ordsModel);
 	ordsList->setEditTriggers(QAbstractItemView::NoEditTriggers);
 	ordsDetWidget->setFixedWidth(0);
@@ -178,11 +216,29 @@ void TabSellerWidget::IniPageOrds()
 	ordsLay->addWidget(ordsList);
 	ordsLay->addWidget(ordsDetWidget);
 }
-void TabSellerWidget::UpdatePageComs()
+
+void AdminWidget::updatePageUsrs()
+{
+	QStringList list;
+	map<std::string, UserModel> usrs;
+	pCon.AdminGetUserList(usrs);
+	for (auto pair : usrs)
+	{
+		QString uid = QString::fromStdString(pair.first);
+		QString nam = QString::fromStdString(pair.second.userName);
+		QString pwd = QString::fromStdString(pair.second.passWord);
+		QString phn = QString::fromStdString(pair.second.phoneNumber);
+		QString add = QString::fromStdString(pair.second.address);
+		QString bal = QString::number(pair.second.balance);
+		list << uid + "\t" + nam + "\t" + pwd + "\t" + phn + "\t" + add + "\t" + bal;
+	}
+	usrsModel->setStringList(list);
+}
+void AdminWidget::updatePageComs()
 {
 	QStringList list;
 	map<std::string, CommodityModel> coms;
-	pCon.SellerGetCommodityList(coms);
+	pCon.AdminGetCommodityList(coms);
 	for (auto pair : coms)
 	{
 		QString cid = QString::fromStdString(pair.first);
@@ -194,11 +250,11 @@ void TabSellerWidget::UpdatePageComs()
 	}
 	comsModel->setStringList(list);
 }
-void TabSellerWidget::UpdatePageOrds()
+void AdminWidget::updatePageOrds()
 {
 	QStringList list;
 	map<std::string, OrderModel> ords;
-	pCon.SellerGetHistoryOrderList(ords);
+	pCon.AdminGetOrderList(ords);
 	for (auto pair : ords)
 	{
 		QString oid = QString::fromStdString(pair.first);
@@ -213,35 +269,24 @@ void TabSellerWidget::UpdatePageOrds()
 	ordsModel->setStringList(list);
 }
 
-void TabSellerWidget::btnReReClick()
+void AdminWidget::listUsrsSelect(const QModelIndex& index)
 {
-	//valid check
-	std::string name = leReNam->text().toStdString();
-	double pri = leRePri->text().toDouble();
-	int num = leReNum->text().toInt();
-	std::string des = teReDes->toPlainText().toStdString();
-	if (name.empty() || pri == 0 || num == 0)
-	{
-		QMessageBox::information(this, QStringLiteral("发布结果"), QStringLiteral("请补全信息"));
-		return;
-	}
-	if (pCon.SellerReleaseCommodity(name, pri, num, des))
-	{
-		QMessageBox::information(this, QStringLiteral("发布结果"), QStringLiteral("发布成功"));
-		leReNam->clear();
-		leRePri->clear();
-		leReNum->clear();
-		teReDes->clear();
-	}
-	else
-	{
-		QMessageBox::information(this, QStringLiteral("发布结果"), QStringLiteral("发布失败"));
-	}
+	uid = usrsModel->data(index).toString().toStdString().substr(0, 4);
+	pCon.AdminGetUser(uid, usr);
+	lbUsrUid->setText(QString::fromStdString(usr.userID));
+	lbUsrNam->setText(QString::fromStdString(usr.userName));
+	lbUsrPwd->setText(QString::fromStdString(usr.passWord));
+	lbUsrPhn->setText(QString::fromStdString(usr.phoneNumber));
+	lbUsrAdd->setText(QString::fromStdString(usr.address));
+	lbUsrBal->setText(QString::number(usr.balance));
+	btnUsrStUp->setChecked(usr.userState);
+	btnUsrStDo->setChecked(!usr.userState);
+	usrsDetWidget->setFixedWidth(170);
 }
-void TabSellerWidget::listComsSelect(const QModelIndex& index)
+void AdminWidget::listComsSelect(const QModelIndex& index)
 {
 	cid = comsModel->data(index).toString().toStdString().substr(0, 4);
-	pCon.SellerGetCommodity(cid, com);
+	pCon.AdminGetCommodity(cid, com);
 	leComNam->setText(QString::fromStdString(com.commodityName));
 	leComPri->setText(QString::number(com.price));
 	leComNum->setText(QString::number(com.number));
@@ -250,10 +295,10 @@ void TabSellerWidget::listComsSelect(const QModelIndex& index)
 	btnComStDo->setChecked(!com.state);
 	comsDetWidget->setFixedWidth(170);
 }
-void TabSellerWidget::listOrdsSelect(const QModelIndex& index)
+void AdminWidget::listOrdsSelect(const QModelIndex& index)
 {
 	oid = ordsModel->data(index).toString().toStdString().substr(0, 4);
-	pCon.SellerGetOrder(oid, ord);
+	pCon.AdminGetOrder(oid, ord);
 	lbOrdOid->setText(QString::fromStdString(ord.orderID));
 	lbOrdCid->setText(QString::fromStdString(ord.commodityID));
 	lbOrdPri->setText(QString::number(ord.unitPrice));
@@ -263,49 +308,54 @@ void TabSellerWidget::listOrdsSelect(const QModelIndex& index)
 	lbOrdBid->setText(QString::fromStdString(ord.buyerID));
 	ordsDetWidget->setFixedWidth(170);
 }
-void TabSellerWidget::btnCloClick()
+
+void AdminWidget::btnLogoutClick()
+{
+	pCon.Logout();
+	emit AdminWidgetClosed();
+	this->hide();
+}
+void AdminWidget::btnComCloClick()
 {
 	comsDetWidget->setFixedWidth(0);
 }
-void TabSellerWidget::btnBidClick()
+void AdminWidget::btnComChaClick()
 {
-	pCon.SellerGetCommodity(cid, com);
-	std::string name = leComNam->text().toStdString();
-	double pri = leComPri->text().toDouble();
-	int num = leComNum->text().toInt();
-	std::string des = tbComDes->toPlainText().toStdString();
+	pCon.AdminGetCommodity(cid, com);
 	bool state = btnComStUp->isChecked();
-	if (pCon.SellerModifyCommodityInfo(cid, pri, des, num, name))
-	{
-		QString Qcid = QString::fromStdString(cid);
-		QString Qnam = QString::fromStdString(name);
-		QString Qpri = QString::number(pri);
-		QString Qnum = QString::number(num);
-		QString Qdat = QString::fromStdString(com.addedDate);
-		QString Qsum = Qcid + "\t" + Qnam + "\t" + Qpri + "\t" + Qnum + "\t" + Qdat;
-		comsModel->setData(comsList->currentIndex(), Qsum);
-		QMessageBox::information(this, QStringLiteral("修改结果"), QStringLiteral("修改成功"));
-	}
-	else
-	{
-		QMessageBox::information(this, QStringLiteral("修改结果"), QStringLiteral("修改失败"));
-	}
 	if (com.state != state)
 	{
 		if (state)
-			pCon.SellerUpshelfCommodity(cid);
+		{
+			pCon.AdminUpshelfCommodity(cid);
+			QMessageBox::information(this, QStringLiteral("上架结果"), QStringLiteral("上架成功"));
+		}
 		else
-			pCon.SellerDownshelfCommodity(cid);
+		{
+			pCon.AdminDownshelfCommodity(cid);
+			QMessageBox::information(this, QStringLiteral("下架结果"), QStringLiteral("下架成功"));
+		}
 	}
 }
-void TabSellerWidget::tabChange(int index)
+void AdminWidget::btnUsrCloClick()
 {
-	if (index == 0)
+	usrsDetWidget->setFixedWidth(0);
+}
+void AdminWidget::btnUsrChaClick()
+{
+	pCon.AdminGetUser(uid, usr);
+	bool state = btnUsrStUp->isChecked();
+	if (usr.userState != state)
 	{
-		UpdatePageComs();
-	}
-	else if (index == 2)
-	{
-		UpdatePageOrds();
+		if (state)
+		{
+			pCon.AdminActiveUser(uid);
+			QMessageBox::information(this, QStringLiteral("操作结果"), QStringLiteral("解封成功"));
+		}
+		else
+		{
+			pCon.AdminDeactiveUser(uid);
+			QMessageBox::information(this, QStringLiteral("操作结果"), QStringLiteral("封禁成功"));
+		}
 	}
 }
